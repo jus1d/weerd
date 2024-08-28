@@ -4,6 +4,7 @@ const CONS = "bcdfghjklmnpqrstvwxz";
 (() => {
   let container = document.getElementById("container");
   let textbox = document.getElementById("text_box");
+  let controls = document.getElementById("controls");
 
   let current;
   let currentMutated;
@@ -20,6 +21,30 @@ const CONS = "bcdfghjklmnpqrstvwxz";
 
   const generateColor = () => {
     return `#${random(0, 16777215).toString(16).padStart(6, "0")}`;
+  };
+
+  const dimColor = (color, factor) => {
+    factor = Math.max(0, Math.min(1, factor));
+
+    let r = parseInt(color.slice(1, 3), 16);
+    let g = parseInt(color.slice(3, 5), 16);
+    let b = parseInt(color.slice(5, 7), 16);
+
+    r = Math.floor(r * (1 - factor));
+    g = Math.floor(g * (1 - factor));
+    b = Math.floor(b * (1 - factor));
+
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+  };
+
+  const updateColor = () => {
+    let color = generateColor();
+    let dimmed = dimColor(color, 0.4);
+
+    document.documentElement.style.setProperty("--background-color", color);
+
+    textbox.style.color = dimmed;
+    controls.style.color = dimmed;
   };
 
   const isVowel = (letter) => {
@@ -71,7 +96,7 @@ const CONS = "bcdfghjklmnpqrstvwxz";
   document.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
       e.preventDefault();
-      container.style.backgroundColor = generateColor();
+      updateColor();
 
       current = generateRandomWord(random(1, 4));
       textbox.textContent = current;
@@ -86,5 +111,5 @@ const CONS = "bcdfghjklmnpqrstvwxz";
     }
   });
 
-  container.style.backgroundColor = generateColor();
+  updateColor();
 })();
