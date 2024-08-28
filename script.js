@@ -81,15 +81,15 @@ const CONS = "bcdfghjklmnpqrstvwxz";
   };
 
   const generateRandomSyllable = () => {
-    switch (random(0, 3)) {
+    switch (random(0, 2)) {
       case 0: // <con><vow>
         return pick(CONS) + pick(VOWS);
       case 1: // <con><vow><con>
         return pick(CONS) + pick(VOWS) + pick(CONS);
       case 2: // <vow><con>
         return pick(VOWS) + pick(CONS);
-      case 3: // <vow>
-        return pick(VOWS);
+      // case 3: // <vow>
+      //   return pick(VOWS);
     }
   };
 
@@ -98,7 +98,10 @@ const CONS = "bcdfghjklmnpqrstvwxz";
       e.preventDefault();
       updateColor();
 
-      current = generateRandomWord(random(1, 4));
+      do {
+        current = generateRandomWord(random(1, 4));
+      } while (current >= 7);
+
       textbox.textContent = current;
     }
     if (e.code === "Enter" && current !== undefined) {
