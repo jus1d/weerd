@@ -100,7 +100,7 @@ const CONS = "bcdfghjklmnpqrstvwxz";
 
       do {
         current = generateRandomWord(random(1, 4));
-      } while (current >= 7);
+      } while (current.length >= 7);
 
       textbox.textContent = current;
     }
