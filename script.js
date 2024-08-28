@@ -6,6 +6,7 @@ const CONS = "bcdfghjklmnpqrstvwxz";
   let textbox = document.getElementById("text_box");
 
   let current;
+  let currentMutated;
 
   const random = (n, m) => {
     return Math.floor(Math.random() * (m - n + 1)) + n;
@@ -14,11 +15,20 @@ const CONS = "bcdfghjklmnpqrstvwxz";
   const pick = (arr) => {
     if (arr.length === 0) return undefined;
 
-    return arr[Math.floor(Math.random() * arr.length)];
+    return arr[random(0, arr.length - 1)];
   };
 
   const generateColor = () => {
-    return `#${random(0, 16777216).toString(16).padStart(6, "0")}`;
+    return `#${random(0, 16777215).toString(16).padStart(6, "0")}`;
+  };
+
+  const isVowel = (letter) => {
+    for (let i = 0; i < VOWS.length; i++) {
+      if (VOWS[i] == letter) {
+        return true;
+      }
+    }
+    return false;
   };
 
   const generateRandomWord = (syllables) => {
@@ -27,6 +37,22 @@ const CONS = "bcdfghjklmnpqrstvwxz";
       word += generateRandomSyllable();
     }
     return word;
+  };
+
+  const mutateWord = (word) => {
+    let idx = random(0, word.length - 1);
+    let letter = word[idx];
+
+    let mutated = word;
+    while (mutated === word) {
+      if (isVowel(letter)) {
+        mutated = word.slice(0, idx) + pick(VOWS) + word.slice(idx + 1);
+      } else {
+        mutated = word.slice(0, idx) + pick(CONS) + word.slice(idx + 1);
+      }
+    }
+
+    return mutated;
   };
 
   const generateRandomSyllable = () => {
@@ -49,6 +75,14 @@ const CONS = "bcdfghjklmnpqrstvwxz";
 
       current = generateRandomWord(random(1, 4));
       textbox.textContent = current;
+    }
+    if (e.code === "Enter" && current !== undefined) {
+      let mutated = currentMutated;
+      while (mutated === currentMutated) {
+        mutated = mutateWord(current);
+      }
+
+      textbox.textContent = mutated;
     }
   });
 
